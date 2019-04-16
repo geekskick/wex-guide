@@ -1,0 +1,3 @@
+[submodule "rf/src/RadioHead-Extras"]
+	path = rf/src/RadioHead-Extras
+	url = https://github.com/geekskick/RadioHead-Extras.git
