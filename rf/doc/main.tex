@@ -1,7 +1,19 @@
 \documentclass[titlepage,a4paper]{article}
 \usepackage[a4paper,includeheadfoot,margin=2.54cm]{geometry}
 \usepackage{graphicx}
-\graphicspath{./img}
+\usepackage{listings}
+\usepackage{glossaries}
+\makeglossaries
+\usepackage{cleveref}
+\graphicspath{{img/}}
+
+\newcommand\imgwidth{0.5\textwidth}
+\newcommand\centrefigurestart{\begin{figure}[h]\begin{center}}
+\newcommand\centrefigureend{\end{center}\end{figure}}
+
+\newacronym{sdr}{SDR}{Software Defined Radio}
+\newacronym{RF}{RF}{Radio Frequencies}
+\newacronym{mitm}{MITM}{man in the middle}
 
 \begin{document}
 \title{Work Experience - RF Guide}
@@ -10,20 +22,31 @@
 
 \tableofcontents
 \listoffigures
+\printglossaries
+\newpage
 
 \section{Introduction}
 \input{introduction.tex}
+\newpage
 
 \section{Equipment}
-The equipment we are using
-\section{How to use this Guide}
-Do I need this?
-\section{Setting Everything Up}
-How to set things up
-\section{gnuradio}
-This is a description of gnuradio and how to use it
-\subsection{The Spectrum}
-This is a brief description of the spectrum on gnuradio and what it shows
+\input{equipment.tex}
+\newpage
+
+\section{Looking at the Spectrum}
+Basic gnuradio
+\newpage
+
+\section{Sending a secret message}
+Feathers
+\newpage
+
+\section{Spying on a secret message}
+gnuradio
+\newpage
+
 \section{Real World Example}
-RTL-SDR
+RTL-SDR car stuff
+\newpage
+
 \end{document}
