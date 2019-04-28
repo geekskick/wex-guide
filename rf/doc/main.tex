@@ -4,8 +4,10 @@
 \usepackage{listings}
 \usepackage{glossaries}
 \makeglossaries
-\usepackage{cleveref}
+
 \graphicspath{{img/}}
+\usepackage{hyperref}
+\usepackage{cleveref}
 
 \newcommand\imgwidth{0.5\textwidth}
 \newcommand\centrefigurestart{\begin{figure}[h]\begin{center}}
@@ -14,6 +16,10 @@
 \newacronym{sdr}{SDR}{Software Defined Radio}
 \newacronym{RF}{RF}{Radio Frequencies}
 \newacronym{mitm}{MITM}{man in the middle}
+\newacronym{ide}{IDE}{Integrated Development Environment}
+\newacronym{vhf}{VHF}{very high frequency}
+\newacronym{uhf}{UHF}{ultra high frequency}
+\newacronym{gui}{GUI}{graphical user interface}
 
 \begin{document}
 \title{Work Experience - RF Guide}
@@ -34,19 +40,29 @@
 \newpage
 
 \section{Looking at the Spectrum}
-Basic gnuradio
+\input{spectrum.tex}
 \newpage
 
 \section{Sending a secret message}
-Feathers
+\input{feathers}
 \newpage
 
 \section{Spying on a secret message}
 gnuradio
 \newpage
 
-\section{Real World Example}
-RTL-SDR car stuff
+\section{Real World Examples and Further Projects}
+\subsection{Tyre Pressure Monitoring System}
+This technique can be used in the 'real world' as demonstrated here: \url{https://www.sharebrained.com/downloads/toorcon/dude\_wheres\_my\_car\_toorcon\_sd\_2013.pdf} where someone has used the same technology to find out the tyre pressure of different cars near them. Work through the slides and the code provided and see what you can see.
+
+\subsection{FM Reciever}
+You can listen to the radio, and watch the spectrum and signals change as you do it by following the guide here: \url{https://www.instructables.com/id/RTL-SDR-FM-radio-receiver-with-GNU-Radio-Companion/}
+
+\subsection{Satellite Images}
+There is a rough guide for receiving images from weather satellites available which may require some special configuration of antenna, if you're up for it! 
+
+\url{http://oz9aec.net/radios/gnu-radio/noaa-weather-satellite-reception-with-gnu-radio-and-usrp/}
+
 \newpage
 
 \end{document}

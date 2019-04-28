@@ -1,2 +1,14 @@
 *.DS_Store
-main.log
+*.py
+*.lof
+*.gz
+*.toc
+*.fdb_latexmk
+*.fls
+*.out
+*.ist
+*.log
+*.glg
+*.glo
+*.gls
+*.aux
