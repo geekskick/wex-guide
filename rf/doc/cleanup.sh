@@ -1,3 +1,3 @@
-mv *.pdf ./pdf/
+mv *.pdf ./pdf/A
 git add ./pdf
 
