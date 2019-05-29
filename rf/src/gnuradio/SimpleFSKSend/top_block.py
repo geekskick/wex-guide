@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Wed May 29 20:18:48 2019
+# Generated: Wed May 29 20:56:43 2019
 ##################################################
 
 from distutils.version import StrictVersion
@@ -36,7 +36,6 @@ import math
 import sip
 import sys
 import time
-import wex
 from gnuradio import qtgui
 
 
@@ -121,7 +120,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self._freq_range = Range(400000000, 470000000, 1000000, 434000000, 200)
         self._freq_win = RangeWidget(self._freq_range, self.set_freq, 'Freq', "counter_slider", float)
         self.top_layout.addWidget(self._freq_win)
-        self.wex_tag_printer_0 = wex.tag_printer(gr.sizeof_char*1, 'preamble', 20)
         self.uhd_usrp_source_0 = uhd.usrp_source(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -308,7 +306,8 @@ class top_block(gr.top_block, Qt.QWidget):
         self.digital_correlate_access_code_tag_bb_0 = digital.correlate_access_code_tag_bb('10101010101010101010101010101010', 0, 'preamble')
         self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_ff(samp_per_sym, 0.01, 0, 0.1, 0.01)
         self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
-        self.blocks_unpacked_to_packed_xx_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, '/tmp/file_sink', False)
+        self.blocks_file_sink_0.set_unbuffered(False)
         self.analog_simple_squelch_cc_0 = analog.simple_squelch_cc(squelch, 1)
         self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(10)
 
@@ -318,11 +317,10 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.analog_quadrature_demod_cf_0, 0), (self.digital_clock_recovery_mm_xx_0, 0))
         self.connect((self.analog_simple_squelch_cc_0, 0), (self.analog_quadrature_demod_cf_0, 0))
         self.connect((self.analog_simple_squelch_cc_0, 0), (self.qtgui_freq_sink_x_0_0, 0))
-        self.connect((self.blocks_unpacked_to_packed_xx_0, 0), (self.wex_tag_printer_0, 0))
         self.connect((self.digital_binary_slicer_fb_0, 0), (self.digital_correlate_access_code_tag_bb_0, 0))
         self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_binary_slicer_fb_0, 0))
         self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.qtgui_time_sink_x_1, 0))
-        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.blocks_unpacked_to_packed_xx_0, 0))
+        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_simple_squelch_cc_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.qtgui_freq_sink_x_0, 0))

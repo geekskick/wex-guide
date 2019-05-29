@@ -54,21 +54,26 @@ int tag_printer_impl::work(int noutput_items,
                                    gr_vector_void_star &output_items) {
   gr::thread::scoped_lock l(d_mutex);
 
+  std::stringstream ss;
+  ss << "--------------- Tag Printer -------------------\n";
+  auto print = false;
   for (int i = 0; i < input_items.size(); ++i) {
     std::vector<tag_t> tags;
     const auto read = nitems_read(i);
+    ss << "SEARCHING IN (" << read << "," << read + static_cast<uint64_t>(noutput_items) << ")\n";
     get_tags_in_range(tags, i, read,
                       read + static_cast<uint64_t>(noutput_items),
                       pmt::mp(tag_name));
     if (tags.size() == 0) { /*std::cout << "No tags called " << tag_name << "
                                found" << std::endl;*/
     } else {
-      std::stringstream ss;
-      ss << "--------------- Tag Printer -------------------\n";
+      print = true;
+
       for (const auto &tag : tags) {
-        ss << "Tag " << pmt::symbol_to_string(tag.key) << " found:\n\t";
+        ss << "Input [" << i << "] Tag \"" << pmt::symbol_to_string(tag.key) << "\" found at offset " << tag.offset <<":\n\t";
 
         const auto* in = static_cast<const uint8_t*>(input_items[i]);
+        ss << "\nDEBUG: " << std::hex << std::showbase << static_cast<int>(*in) << std::endl;
         for (int y = 0; y < len; ++y) {
           const auto data_byte = static_cast<int>(in[y + tag.offset]);
           if (std::isprint(data_byte)) {
@@ -80,10 +85,11 @@ int tag_printer_impl::work(int noutput_items,
         }
         ss << "\n";
       }
-      std::cout << ss.str() << std::endl;
     }
   }
 
+      
+  if(print) { std::cout << ss.str() << std::endl; }
   // Tell runtime system how many output items we produced.
   return noutput_items;
 }
