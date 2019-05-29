@@ -61,13 +61,19 @@ void setup()
 }
 
 void loop() {
-  delay(50);  // Wait 50ms between transmits, could also 'sleep' here!
-
-  static char radiopacket[20] = "Hello World";
-  Serial.print("Sending "); Serial.println(radiopacket);
-  
-  // Send a message!
-  rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
-  rf69.waitPacketSent();
+  delay(500);  // Wait 500ms between transmits, could also 'sleep' here!
+  if(Serial.available() > 0){
+    Serial.read();
+    static unsigned i = 0;
+    char radiopacket[50] = "Hello World ";
+    char temp[10];
+    snprintf(temp, 10, "%d", i++ %10);
+    strcat(radiopacket,temp);
+    Serial.print("Sending "); Serial.println(radiopacket);
+    
+    // Send a message!
+    rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
+    rf69.waitPacketSent();
+  }
 
 }
