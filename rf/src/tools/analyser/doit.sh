@@ -1,0 +1,2 @@
+make env
+make app
