@@ -183,7 +183,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 572)</value>
+      <value>(1048, 580)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -889,7 +889,7 @@
     <key>digital_correlate_access_code_tag_bb</key>
     <param>
       <key>access_code</key>
-      <value>1010101010101010101010101010101000101101</value>
+      <value>10101010101010101010101010101010</value>
     </param>
     <param>
       <key>alias</key>
