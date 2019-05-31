@@ -20,7 +20,7 @@ In order to get data into the flow from the \gls{sdr} we must use a source. In t
 
 Drag in the RTL-SDR source to the canvas.
 \centrefigurestart
-\includegraphics[width=0.5\textwidth]{rtl_src.png}
+\includegraphics[width=\textwidth]{rtl_src.png}
 \caption{A gnuradio flow with just a radio source}
 \centrefigureend
 
@@ -41,10 +41,10 @@ Now you can enter it's unique ID in the radio's settings under \textit{gain}. Th
 Do the same, creating a slider for the \textit{centre frequency} and \textit{sample rate} with the following settings:
 
 \begin{table}[H]
-\begin{tabular}{ccccc}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
 Setting & Start & Stop & Default & Step \\ \hline
-\multicolumn{1}{|c|}{Centre Frequency} & \multicolumn{1}{c|}{430000000} & \multicolumn{1}{c|}{440000000} & \multicolumn{1}{c|}{435000000} & \multicolumn{1}{c|}{500000} \\ \hline
+Centre Frequency & 430000000 & 440000000 & 435000000 & 500000 \\ \hline
 Sample Rate & 1000000 & 10000000 & 2000000 & 500000 \\ \hline
 \end{tabular}
 \caption{Radio slider settings}
@@ -54,7 +54,7 @@ Sample Rate & 1000000 & 10000000 & 2000000 & 500000 \\ \hline
 The next thing is to actually be able to see the spectrum! For this a \textit{QT GUI Frequency Sink} is required. Drag this in and connect it to the radio by clicking the blue tabs.
 
 \centrefigurestart
-\includegraphics[width=0.5\textwidth]{basic}
+\includegraphics[width=\textwidth]{basic}
 \caption{A basic flow.}
 \centrefigureend
 
@@ -65,11 +65,11 @@ Again, open the frequecy sink block and set the centre frequency to the same sli
 \caption{FFT Sink Configuration.}
 \centrefigureend
 
-While you're there, go to the \textit{Config} tab and select \textit{yes} to control panel. Now run your flow by clicking the play button at the top of the gnuradio window. This will turn your flow into a python script and run it. If there are errors address these before continuing. All being well, the window that pop up should have three sliders, and a very familiar looking spectrum. Take some time to play with the sliders and see what they do to the spectrum view. (It helps if you enable \textit{max hold} in the spectrum control panel. 
+While you're there, go to the \textit{Config} tab and select \textit{yes} to control panel. Now run your flow by clicking the play button at the top of the gnuradio window. This will turn your flow into a python script and run it. If there are errors address these before continuing. All being well, the window that pops up should have three sliders, and a very familiar looking spectrum. Take some time to play with the sliders and see what they do to the spectrum view. (It helps if you enable \textit{max hold} in the spectrum control panel). 
 
 \subsection{Isolating the good bits}
 
-The next step is to use an \gls{lpf} to make sure we receive only the transmission we are interested in. Drag an \gls{lpf} into the gnuradio flow, and add another QT Frequency Sink to see the output. In addition, it's a good idea to add some more QT Range Widgets so you can change the parameters of the filter as it's running. The parameters of interest here are the \textit{cutoff frequency} (how wide the filter is) and the \textit{transition width} (how slopey it's edges are). 
+The next step is to use a \gls{lpf} to make sure we receive only the parts of the transmission we are interested in. Drag an \gls{lpf} into the gnuradio flow, and add another QT Frequency Sink to see the output. In addition, it's a good idea to add some more QT Range Widgets so you can change the parameters of the filter as it's running. The parameters of interest here are the \textit{cutoff frequency} (how wide the filter is) and the \textit{transition width} (how slopey it's edges are). 
 
 \centrefigurestart
 \includegraphics[width=0.5\textwidth]{lpf_filter}
@@ -95,7 +95,13 @@ Our aim for the \gls{lpf} is to have an output that looks abit like barad-dur.
 Run your new flow and you should be able to use the filter sliders to isolate specific parts of your signal. I found a value of around 20000 for both to give pretty good results during experimenation. We can further help our filter by using \textit{squelch}. This block will only let signals above a certain amplitude through, effectively cutting out all the noise. Put this block after your filter, and set it's \textit{alpha} to 1. Again, make a slider for it's squelch value and play with it - experiments proved that a value of -40 gave good results for me.
 
 \centrefigurestart
-\includegraphics[width=0.5\textwidth]{squelch}
+\includegraphics[width=0.5\textwidth]{lpf_peaks}
+\caption{An ideal output from the LPF}
+\centrefigureend
+
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{squelch}
 \caption{Radio - LPF - Squelch - Frequency Sink}
 \centrefigureend
 
@@ -107,7 +113,15 @@ Now we have isolated the peaks, we can turn these into bits by using a \textit{Q
 \caption{Radio - LPF - Squelch - Quad Demod - Time Sink}
 \centrefigureend
 
-This new graph will have turned the frequency changes into changes against time. This will be easyier to see in the Time Sink if you set the trigger to auto, and then click '+ X Max' loads until you can see what looks like something interesting.
+This new graph will have turned the frequency changes into changes against time. This will be easier to see in the Time Sink if you set the trigger to auto, and when the flow is running click '+ X Max' loads until you can see what looks like something interesting.
+
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{trig_auto}
+\caption{Setting the timesink trigger to auto in the GUI}
+\centrefigureend
+
+
 
 \centrefigurestart
 \includegraphics[width=\textwidth]{qd_time}
@@ -121,10 +135,10 @@ In order to turn the signal into binary we need to know exactly when the transit
 \begin{table}[H]
 \begin{tabular}{|c|c|}
 \hline
-\begin{tabular}[c]{@{}c@{}}Variable\\  Name\end{tabular} & Value \\ \hline
+Variable Name & Value \\ \hline
 baudrate\_hz & 9600 \\ \hline
 deviation\_hz & 19200 \\ \hline
-\multicolumn{1}{|l|}{samples\_per\_symbol} & \multicolumn{1}{l|}{sample\_rate/baudrate\_hz} \\ \hline
+samples\_per\_symbol & sample\_rate/baudrate\_hz \\ \hline
 \end{tabular}
 \end{table}
 
@@ -155,6 +169,29 @@ What you should see is a slight difference between the time sinks for just the q
 \caption{Detail of a series of 1 and 0 before and after clock recovery}
 \centrefigureend
 
+Finally add a \textit{binary slicer} to the end of the clock recovery block. Done.
 \subsection{Find start}
+Finding the start of the signal is relatively easy as a block called \textit{Correlate Access Code - Tag} will do this by searching for a pattern in the binary stream coming in. Through inspection of the time sinks before we can see that the signal starts with a long stream of 1 and 0. This is known as the preamble and is present in lots of signals; it's the radio's way of saying 'LISTEN TO ME I'M TRANSMITTING' before it sends any useful data. In your new block set the \textit{Access Code} to be 1010101010101010101010101010101000101101 (or 4 bytes of 10101010 then a byte of 00101101), a threshhold of 0, and call the tag 'preamble'. 
 
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{cac_settings}
+\caption{Correlate Access Code Settings}
+\centrefigureend
+
+This block, when it sees a stream of data matching the access code will insert a special tag into the data stream with the name 'preamble' to show that it's detected a preamble. Finally output this to a file using a \textit{File Meta Sink}. This file may grow quite large so I recommend making something like "/tmp/file\_sink" so that it's deleted when you turn off your computer.
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{full_Flow}
+\caption{Radio - LPF - Squelch - Quad Demod - Clock Recovery - Binary Slicer - Correlate Access Code - File Sink}
+\centrefigureend
 \subsection{Decode}
+This is where it can get abit tougher! I have cobbled together a small tool to help. It's not that great and misses some of the messages, however it's a start! In the repo you downloaded use the analyser to examine the contents of the file you created. This tool looks for the 'preamble' tag in the file and then prints off a certain number of bytes afterwards to the screen. In order to build the tool navigate to it's directory and enter the command 'source doit.sh'. This will creat a folder called 'build' and make the application there. Then you can use it by entering the command './analyser /tmp/file\_sink' and it should print off some of the packets.
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{packets}
+\caption{Output of the analyser}
+\centrefigureend
+
+It appears to skip every other packet at this stage so, however we can clearly see a bunch of 'Hello World' messages decoded - congratulations you have successfully performed a \gls{mitm} attack on your feather!
+
+A full flow is available to do this in the repo - if you get stuck at any point.
