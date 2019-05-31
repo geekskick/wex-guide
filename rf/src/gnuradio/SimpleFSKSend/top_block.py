@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Wed May 29 20:56:43 2019
+# Generated: Fri May 31 08:16:34 2019
 ##################################################
 
 from distutils.version import StrictVersion
@@ -26,6 +26,7 @@ from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import filter
 from gnuradio import gr
+from gnuradio import gr, blocks
 from gnuradio import qtgui
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
@@ -306,8 +307,9 @@ class top_block(gr.top_block, Qt.QWidget):
         self.digital_correlate_access_code_tag_bb_0 = digital.correlate_access_code_tag_bb('10101010101010101010101010101010', 0, 'preamble')
         self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_ff(samp_per_sym, 0.01, 0, 0.1, 0.01)
         self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, '/tmp/file_sink', False)
-        self.blocks_file_sink_0.set_unbuffered(False)
+        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, '', ""); self.blocks_tag_debug_0.set_display(True)
+        self.blocks_file_meta_sink_0 = blocks.file_meta_sink(gr.sizeof_char*1, '/tmp/file_sink', sample_rate, 1, blocks.GR_FILE_BYTE, False, 1000000, "", False)
+        self.blocks_file_meta_sink_0.set_unbuffered(False)
         self.analog_simple_squelch_cc_0 = analog.simple_squelch_cc(squelch, 1)
         self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(10)
 
@@ -320,7 +322,8 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.digital_binary_slicer_fb_0, 0), (self.digital_correlate_access_code_tag_bb_0, 0))
         self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_binary_slicer_fb_0, 0))
         self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.qtgui_time_sink_x_1, 0))
-        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.blocks_file_sink_0, 0))
+        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.blocks_file_meta_sink_0, 0))
+        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.blocks_tag_debug_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_simple_squelch_cc_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.qtgui_freq_sink_x_0, 0))

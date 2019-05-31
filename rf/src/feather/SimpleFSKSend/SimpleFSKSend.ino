@@ -62,8 +62,8 @@ void setup()
 
 void loop() {
   delay(500);  // Wait 500ms between transmits, could also 'sleep' here!
-  if(Serial.available() > 0){
-    Serial.read();
+  //if(Serial.available() > 0){
+  //  Serial.read();
     static unsigned i = 0;
     char radiopacket[50] = "Hello World ";
     char temp[10];
@@ -74,6 +74,6 @@ void loop() {
     // Send a message!
     rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
     rf69.waitPacketSent();
-  }
+  //}
 
 }
