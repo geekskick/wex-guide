@@ -65,8 +65,8 @@ int main(const int argc, const char *argv[]) {
             case state::finding_data:{
                     if(is_start_of_data(c)){    
                         current_state = state::in_data;
-                        aggregation = c;
-                        count = 1;
+                        aggregation = 0;
+                        count = 0;
                     }                
                 }
                 break;

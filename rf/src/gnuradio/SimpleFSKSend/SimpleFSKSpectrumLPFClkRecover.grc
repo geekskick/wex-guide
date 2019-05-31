@@ -889,7 +889,7 @@
     <key>digital_correlate_access_code_tag_bb</key>
     <param>
       <key>access_code</key>
-      <value>1010101010101010101010101010101010</value>
+      <value>1010101010101010101010101010101000101101</value>
     </param>
     <param>
       <key>alias</key>

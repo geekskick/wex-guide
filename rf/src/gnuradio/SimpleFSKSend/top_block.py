@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Fri May 31 08:19:04 2019
+# Generated: Fri May 31 08:29:17 2019
 ##################################################
 
 from distutils.version import StrictVersion
@@ -304,7 +304,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.tabs_layout_0.addWidget(self._qtgui_freq_sink_x_0_win)
         self.low_pass_filter_0 = filter.fir_filter_ccf(1, firdes.low_pass(
         	1, sample_rate, lpf_co, lpf_tw, firdes.WIN_BLACKMAN, 6.76))
-        self.digital_correlate_access_code_tag_bb_0 = digital.correlate_access_code_tag_bb('1010101010101010101010101010101010', 0, 'preamble')
+        self.digital_correlate_access_code_tag_bb_0 = digital.correlate_access_code_tag_bb('1010101010101010101010101010101000101101', 0, 'preamble')
         self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_ff(samp_per_sym, 0.01, 0, 0.1, 0.01)
         self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
         self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, '', ""); self.blocks_tag_debug_0.set_display(True)
