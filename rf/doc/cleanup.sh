@@ -1,3 +1,4 @@
-mv *.pdf ./pdf/A
+cp *.pdf ./pdf/
 git add ./pdf
+git rm *.pdf
 
