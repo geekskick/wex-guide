@@ -1,4 +1,4 @@
-In this section we will use our gnuradio flow to perform a \gls{mitm} attack on our two feathers, as shown in \cref{mitm}.
+In this section we will make a custom gnuradio flow to perform a \gls{mitm} attack on our two feathers, as shown in \cref{mitm}.
 
 \centrefigurestart
 \includegraphics[width=\textwidth]{mitm.png}
@@ -6,13 +6,79 @@ In this section we will use our gnuradio flow to perform a \gls{mitm} attack on 
 \label{mitm}
 \centrefigureend
 
-Using the gnuradio flow from before, find the frequency which the feather is transmitting on. It's probably going to be the loudest signal you can see, since the transmitter is close to the antenna. 
+In this section will will walk through the steps to looking at the data send over the air.
 
-\subsection{Filtering}
+\centrefigurestart
+\includegraphics[width=\textwidth]{gnuflow_flow}
+\caption{The steps to looking at the data sent}
+\label{mitm}
+\centrefigureend
 
-The first step is to use an \gls{lpf} to make sure we receive only the transmission we are interested in. Drag an \gls{lpf} into the gnuradio flow, and add another QT Frequency Sink to see the output. In addition, it's a good idea to add some QT Range Widgets so you can change the parametres of the filter as it's running. Our aim for the \gls{lpf} is to have an output that looks abit like barad-dur.
 
-\begin{figure}
+\subsection{Connecting the Radio}
+In order to get data into the flow from the \gls{sdr} we must use a source. In this case, it's the RTL-SDR source (In my examples I will be using a slightly different one, however the main points are the same) if there are issues there are plenty of resources available online to work through the RTL-SDR specifics \footnote{\url{https://www.instructables.com/id/RTL-SDR-FM-radio-receiver-with-GNU-Radio-Companion/}}.
+
+Drag in the RTL-SDR source to the canvas.
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{rtl_src.png}
+\caption{A gnuradio flow with just a radio source}
+\centrefigureend
+
+If you double click the block you will get some options, in here the key things to find are the \textit{sample rate}, \textit{gain}, and \textit{centre frequency}. The sample rate affects how quickly the radio is taking measurements (the rate at which it samples!) and as a result how wide the spectrum we are monitoring is. The gain is how loud that measurement is. The centre frequency is where the middle of the spectrum we are observing sits. The best way for us to experiment with these settings is to use the \textit{QT GUI Range} widget, this widget givs us a slider on the GUI to change settings at runtime. In order to do this, first, double click the widget's block and give it a meaningful ID, something like \textit{gain\_slider}. Give it a start value of 0, a stop value of 1, and a step of 0.1.
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{range_settings}
+\caption{Setting up a slider}
+\centrefigureend
+
+Now you can enter it's unique ID in the radio's settings under \textit{gain}. This is effectively telling the radio to get it's gain value from the slider called \textit{gain\_slider}.
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{gain_slider_in_usrp}
+\caption{Using a slider value for the gain in the radio source.}
+\centrefigureend
+
+Do the same, creating a slider for the \textit{centre frequency} and \textit{sample rate} with the following settings:
+
+\begin{table}[H]
+\begin{tabular}{ccccc}
+\hline
+Setting & Start & Stop & Default & Step \\ \hline
+\multicolumn{1}{|c|}{Centre Frequency} & \multicolumn{1}{c|}{430000000} & \multicolumn{1}{c|}{440000000} & \multicolumn{1}{c|}{435000000} & \multicolumn{1}{c|}{500000} \\ \hline
+Sample Rate & 1000000 & 10000000 & 2000000 & 500000 \\ \hline
+\end{tabular}
+\caption{Radio slider settings}
+\end{table}
+
+\subsubsection{Viewing the spectrum}
+The next thing is to actually be able to see the spectrum! For this a \textit{QT GUI Frequency Sink} is required. Drag this in and connect it to the radio by clicking the blue tabs.
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{basic}
+\caption{A basic flow.}
+\centrefigureend
+
+Again, open the frequecy sink block and set the centre frequency to the same slider as your radio. Set the bandwidth to your sample rate slider:
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{fft_sink}
+\caption{FFT Sink Configuration.}
+\centrefigureend
+
+While you're there, go to the \textit{Config} tab and select \textit{yes} to control panel. Now run your flow by clicking the play button at the top of the gnuradio window. This will turn your flow into a python script and run it. If there are errors address these before continuing. All being well, the window that pop up should have three sliders, and a very familiar looking spectrum. Take some time to play with the sliders and see what they do to the spectrum view. (It helps if you enable \textit{max hold} in the spectrum control panel. 
+
+\subsection{Isolating the good bits}
+
+The next step is to use an \gls{lpf} to make sure we receive only the transmission we are interested in. Drag an \gls{lpf} into the gnuradio flow, and add another QT Frequency Sink to see the output. In addition, it's a good idea to add some more QT Range Widgets so you can change the parameters of the filter as it's running. The parameters of interest here are the \textit{cutoff frequency} (how wide the filter is) and the \textit{transition width} (how slopey it's edges are). 
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{lpf_filter}
+\caption{Where the cutoff frequency and transition width matter.}
+\centrefigureend
+
+Our aim for the \gls{lpf} is to have an output that looks abit like barad-dur.
+
+\begin{figure}[H]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
@@ -25,3 +91,70 @@ The first step is to use an \gls{lpf} to make sure we receive only the transmiss
         \caption{FSK Signal as seen on a frequency plot.}
     \end{minipage}
 \end{figure}
+
+Run your new flow and you should be able to use the filter sliders to isolate specific parts of your signal. I found a value of around 20000 for both to give pretty good results during experimenation. We can further help our filter by using \textit{squelch}. This block will only let signals above a certain amplitude through, effectively cutting out all the noise. Put this block after your filter, and set it's \textit{alpha} to 1. Again, make a slider for it's squelch value and play with it - experiments proved that a value of -40 gave good results for me.
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{squelch}
+\caption{Radio - LPF - Squelch - Frequency Sink}
+\centrefigureend
+
+\subsection{Get signal in terms of time}
+Now we have isolated the peaks, we can turn these into bits by using a \textit{Quadradure Demod} block with a gain setting of 1. Plug the output from this into a \textit{QT GUI Time Sink}, and enable the time sink's control panel the saem way you did with the frequency sink. 
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{dq_flow}
+\caption{Radio - LPF - Squelch - Quad Demod - Time Sink}
+\centrefigureend
+
+This new graph will have turned the frequency changes into changes against time. This will be easyier to see in the Time Sink if you set the trigger to auto, and then click '+ X Max' loads until you can see what looks like something interesting.
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{qd_time}
+\caption{Our signal against time}
+\centrefigureend
+
+\subsection{Turn into binary}
+
+In order to turn the signal into binary we need to know exactly when the transition happens. In this section we will do that using the \textit{Clock Recovery MM} block and a \textit{binary slicer}. The clock recovery relies on knowing the deviation (how far apart your peaks are in the frequency plot) and your baud rate (how quickly bits are sent in the data). Since we made the feathers talk to each other, we know these settings - so it becomes a reltively easy task of plopping numbers into an equation. In the real world however the process of finding this information may take some time and extra snooping around the RF spectrum and settings. Drag in 3 \textit{variable} blocks and use the following information:
+
+\begin{table}[H]
+\begin{tabular}{|c|c|}
+\hline
+\begin{tabular}[c]{@{}c@{}}Variable\\  Name\end{tabular} & Value \\ \hline
+baudrate\_hz & 9600 \\ \hline
+deviation\_hz & 19200 \\ \hline
+\multicolumn{1}{|l|}{samples\_per\_symbol} & \multicolumn{1}{l|}{sample\_rate/baudrate\_hz} \\ \hline
+\end{tabular}
+\end{table}
+
+Then, in your clock recovery block set the \textit{omega} to be \textit{samples\_per\_symbol}.
+
+\centrefigurestart
+\includegraphics[width=0.5\textwidth]{clock_recovery}
+\caption{Clock recovery block settings}
+\centrefigureend
+
+Again, connect a time sink to this to see the output.
+
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{clk_recovery_flow}
+\caption{Radio - Filter - Squelch - Quad Demod - Clock Recovery}
+\centrefigureend
+
+What you should see is a slight difference between the time sinks for just the quad demod and the clock recovery. The clock recovery one will look a bit pointier, and the lines will be less thick. This is clearest at the start of the graph - one data point will be high, and the next low whereas without the clock recovery this part of this signal has 'fatter' highs and lows.
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{clock_vs_qd_time}
+\caption{The signal before and after clock recovery}
+\centrefigureend
+
+\centrefigurestart
+\includegraphics[width=\textwidth]{clk_recovery_vs_qd_zoom}
+\caption{Detail of a series of 1 and 0 before and after clock recovery}
+\centrefigureend
+
+\subsection{Find start}
+
+\subsection{Decode}

@@ -4,13 +4,14 @@
 \usepackage{listings}
 \usepackage{glossaries}
 \makeglossaries
+\usepackage{float}
 
 \graphicspath{{img/}}
 \usepackage{hyperref}
 \usepackage{cleveref}
 
 \newcommand\imgwidth{0.5\textwidth}
-\newcommand\centrefigurestart{\begin{figure}[h]\begin{center}}
+\newcommand\centrefigurestart{\begin{figure}[H]\begin{center}}
 \newcommand\centrefigureend{\end{center}\end{figure}}
 
 \newacronym{sdr}{SDR}{Software Defined Radio}
@@ -45,11 +46,11 @@
 \newpage
 
 \section{Sending a secret message}
-\input{feathers}
+\input{feathers.tex}
 \newpage
 
 \section{Spying on a secret message}
-\input{decoding}
+\input{decoding.tex}
 \newpage
 
 \section{Real World Examples and Further Projects}
