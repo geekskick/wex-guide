@@ -1,5 +1,6 @@
 \documentclass[titlepage,a4paper]{article}
 \usepackage[a4paper,includeheadfoot,margin=2.54cm]{geometry}
+\usepackage{tcolorbox}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{glossaries}
@@ -14,6 +15,16 @@
 \newcommand\centrefigurestart{\begin{figure}[H]\begin{center}}
 \newcommand\centrefigureend{\end{center}\end{figure}}
 
+\newcommand{\cfbox}[2]{\vspace{1cm}%
+    \colorlet{currentcolor}{.}%
+    {\color{#1}%
+    \fbox{\color{currentcolor}{%
+    \begin{minipage}{14cm}\begin{center}\vspace{5mm}%
+    #2%
+	\end{center}\vspace{5mm}\end{minipage}}}\vspace{1cm}%
+}%
+}
+
 \newacronym{sdr}{SDR}{Software Defined Radio}
 \newacronym{RF}{RF}{Radio Frequencies}
 \newacronym{mitm}{MITM}{man in the middle}
@@ -23,6 +34,86 @@
 \newacronym{gui}{GUI}{graphical user interface}
 \newacronym{lpf}{LPF}{low pass filter}
 
+\newglossaryentry{repo}{
+	name=repository,
+	description=a storage location from which software packages may be retrieved and installed on a computer
+}
+
+\newglossaryentry{timesink}{
+	name=time sink,
+	description=a gnuradio block which shows the signal as amplitude against time
+}
+
+\newglossaryentry{fftsink}{
+	name=FFT sink,
+	description=a gnuradio block which shows the signal as amplitude against frequency
+}
+
+\newglossaryentry{source}{
+	name=source,
+	description=a gnuradio block which brings data into the flow
+}
+
+\newglossaryentry{samplerate}{
+	name=sample rate,
+	description=how quickly the analog value is turned into a digital one and passed to the gnuradio flow
+}
+
+\newglossaryentry{cutoff}{
+	name=cutoff frequency,
+	description=that max (or min) frequency a filter will let through
+}
+
+\newglossaryentry{transition}{
+	name=transition width,
+	description=how slopey the edge of a filter are
+}
+
+\newglossaryentry{squelch}{
+	name=squelch,
+	description=a gnuradio block that stops any frequency below a set threshold
+}
+
+\newglossaryentry{qd}{
+	name=quadrature demod,
+	description=a gnuradio block that turns frequency changes into amplitude changes
+}
+
+\newglossaryentry{crmm}{
+	name=clock recovery MM,
+	description=a gnuradio block that synchronises the edge of a binary signal to a clock
+}
+
+\newglossaryentry{binslice}{
+	name=binary slicer,
+	description=a gnuradio block that rounds values to ones and zeros
+}
+
+\newglossaryentry{deviation}{
+	name=deviation,
+	description=how far from the centre frequency a peak it
+}
+
+\newglossaryentry{baudrate}{
+	name=baud rate,
+	description=how many bits are sent per second
+}
+
+\newglossaryentry{cac}{
+	name=correlate access code - tag,
+	description=a gnuradio block that finds a code in the bit stream
+}
+
+\newglossaryentry{preamble}{
+	name=preamble,
+	description="LISTEN TO ME I'M TRANSMITTING"
+}
+
+\newglossaryentry{sink}{
+	name=sink,
+	description=a gnuradio block that lets data leave the flow
+}
+
 \begin{document}
 \title{Work Experience - RF Guide}
 \author{Patrick Mintram}
@@ -30,7 +121,6 @@
 
 \tableofcontents
 \listoffigures
-\printglossaries
 \newpage
 
 \section{Introduction}
@@ -38,7 +128,7 @@
 \newpage
 
 \section{Equipment}
-\input{equipment.tex}
+\input{equipment.tex}t
 \newpage
 
 \section{Looking at the Spectrum}
@@ -57,7 +147,7 @@
 \subsection{Tyre Pressure Monitoring System}
 This technique can be used in the 'real world' as demonstrated here: \url{https://www.sharebrained.com/downloads/toorcon/dude\_wheres\_my\_car\_toorcon\_sd\_2013.pdf} where someone has used the same technology to find out the tyre pressure of different cars near them. Work through the slides and the code provided and see what you can see.
 
-\subsection{FM Reciever}
+\subsection{FM Receiver}
 You can listen to the radio, and watch the spectrum and signals change as you do it by following the guide here: \url{https://www.instructables.com/id/RTL-SDR-FM-radio-receiver-with-GNU-Radio-Companion/}
 
 \subsection{Satellite Images}
@@ -66,5 +156,5 @@ There is a rough guide for receiving images from weather satellites available wh
 \url{http://oz9aec.net/radios/gnu-radio/noaa-weather-satellite-reception-with-gnu-radio-and-usrp/}
 
 \newpage
-
+\printglossary
 \end{document}

@@ -29,18 +29,20 @@ We can easily see the effect of these signals by using equipment which uses them
 \label{uhd_fft}
 \centrefigureend
 
-The spike on the yellow line in \cref{uhd_fft} shows that there is some signal present at the 434MHz frequency. We can change the settings on this window to see other signals which might be present, but first you need to run the following command from the command line to open the window.
-\begin{lstlisting}
-uhd_fft -f 434000000 -s 10000000
-\end{lstlisting}
-Try looking somewhere around 2.4GHz and seeing how busy it is. What do you think these signal might be?
+The spike on the yellow line in \cref{uhd_fft} shows that there is some signal present at the 434MHz frequency. We can change the settings on this window to see other signals which might be present, but first you need to run the following command from the command line to open the window. \verb|uhd_fft| is a provided command which opens a spectrum analyser like the one in \cref{uhd_fft}
+
+\cfbox{red}{ uhd\_fft -f 434000000 -s 10000000 }
+
+Try looking somewhere around 2.4GHz and seeing how busy it is, by changing the rx tune frequency highlighted in \cref{uhd_fft}. Alternatively you can run the command again with different values, the number after the \verb|-f| is the centre frequency, and the number after the \verb|-s| is the sample rate, or how wide the spectrum is.
 
 \subsection{gnuradio flows}
-Rather than using a prepackaged command like uht\_fft we can make our own \gls{gui}s using gnuradio companion. This can be a bit weird, so to start you off one has been provided. From the command line enter:
-\begin{lstlisting}
-gnuradio-companion 
-\end{lstlisting}
-From here open up the provided file FFT.grc and you can click the play button highlighted in \cref{grc_fft} and see the spectrum as we did before. At this point it's worth taking some time to familiarise yourself with gnuradio using the tutorial available here: \url{https://wiki.gnuradio.org/index.php/Guided\_Tutorial\_GRC}, that way it wont be a shock if the instruction is to 'add in the Throttle block', for example.
+Rather than using a prepackaged command like \verb|uht_fft| we can make our own \gls{gui}s using gnuradio companion. This can be a bit weird, so to start you off one has been provided. From the command line enter:
+
+\cfbox{red}{ gnuradio-companion } 
+
+\cfbox{blue}{ Open up the provided file FFT.grc and click the play button highlighted. } 
+
+You should see the spectrum as we did before. At this point it's worth taking some time to familiarise yourself with gnuradio using the tutorial available here: \url{https://wiki.gnuradio.org/index.php/Guided\_Tutorial\_GRC}, that way it wont be a shock if the instruction is to 'add in the Throttle block', for example.
 
 \centrefigurestart
 \includegraphics[width=\textwidth]{grc_fft.png}
