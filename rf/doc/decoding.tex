@@ -248,13 +248,29 @@ This block, when it sees a stream of data matching the access code will insert a
 \caption{Radio - LPF - Squelch - Quad Demod - Clock Recovery - Binary Slicer - Correlate Access Code - File Sink}
 \centrefigureend
 
+A full flow is available to do this in the \gls{repo} - if you get stuck at any point.
+
 \subsection{Decode}
 Now come the hard part - the decoding. This can be difficult because in the real world you might not know what you're looking for in the file. It is also made trickier by the way that \gls{grc} handles the demodulated bit stream. The main thing to know is that each bit is represented by a byte in the output. 
 
-\subsubsection {Understanding what's in the file}
-A \verb|1| bit  will look like a \verb|01| byte in the file, and a \verb|0| bit will look like a \verb|00| byte in the file. The \gls{lsb} is the most important one! There is a tool to help demonstrate this process in the \verb|src\tools| directory of this \gls{repo}. Run it using \lstlisting{python make_binbyte_vile.py 00110101 out} to see how \gls{grc} turns the binary \verb|00110101| into bytes and put it in a file called "out". Take some time to play with this and understand what's happening here. You can see the output using the \verb|xxd| tool using \lstlisting{xxd out}, or some other binary file viewer, a good one is 010editor if you have it. A top tip for this is to ignore the first digit printed, and then every other one after that; so "0001000001" turns into "010001".
+\paragraph*{Understanding what's in the file} might take a bit, so there is a small tool to help demonstrate that a \verb|1| bit  will look like a \verb|01| byte in the file, and a \verb|0| bit will look like a \verb|00| byte in the file. The \gls{lsb} is the most important one! There is a tool to help demonstrate this process in the \verb|src\tools| directory of this \gls{repo}. Run it  to see how \gls{grc} turns the binary  \verb|00110101| into bytes and put it in a file called "out". 
 
-\subsubsection{The other hard bit}
-This part is unfortunately quite manual in the real world - it's basically looking through the file created and looking for patterns, or things that are out of the ordinary. Fortunately you know the secret message which was sent, so you know to look for a pattern of \verb|1|s and \verb|0|s which spells out the secret message! At this point you will need to compare the bits to the \gls{ascii} for them, for example an "a" in hex is \verb|61|, which is \verb|01100001| in binary. If you need a reminder of the \gls{ascii} table there are loads of great comparison tables on google. So if you see the pattern \verb|0001010000000001| in the file created, this means an "a" has been demodulated in the \gls{rf} signal sent.
 
-A full flow is available to do this in the \gls{repo} - if you get stuck at any point.
+\cfbox{red}{python make\_binbyte\_file.py 00110101 out}
+
+Take some time to play with this and understand what's happening here. You can see the output using the \verb|xxd| tool or some other binary file viewer, a good one is 010editor if you have it. A top tip for this is to ignore the first digit printed, and then every other one after that; so "0001000001" turns into "010001".
+
+ \cfbox{red}{xxd out}
+
+\paragraph*{The other hard bit} is unfortunately quite manual in the real world - it's basically looking through the file created and looking for patterns, or things that are out of the ordinary. Fortunately you know the secret message which was sent, so you know to look for a pattern of \verb|1|s and \verb|0|s which spells out the secret message! At this point you will need to compare the bits to the \gls{ascii} for them, for example an "a" in hex is \verb|61|, which is \verb|01100001| in binary. If you need a reminder of the \gls{ascii} table there are loads of great comparison tables on google. So if you see the pattern \verb|0001010000000001| in the file created, this means an "a" has been demodulated in the \gls{RF} signal sent.
+
+\cfbox{blue}{Use xxd (or your favourite tool) to inspect the output from the \gls{grc} flow and find the secret message in the data. This might be difficult to spot, so take plenty of breaks to prevent getting \textit{binary blindness}\footnote{Not a real medical condition, just where it gets difficult to see the patterns in loads of 0s and 1s on the screen}.}
+
+\subsection{Further things to do with your flow}
+And that's it! You have now successfully decoded a secret message sent over the air using your \gls{sdr}. Here's some extra things you can do in pairs:
+\begin{enumerate}
+\item Change the secret message sent and find that in the output file.
+\item Look at the messages sent - what is the extra stuff that the adafruit library is sending in addition to the secret message?
+\item Change the frequency the secret message is sent on and try to find it, then decode it!
+
+\end{enumerate}
